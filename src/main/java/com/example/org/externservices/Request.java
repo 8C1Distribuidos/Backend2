@@ -2,6 +2,7 @@ package com.example.org.externservices;
 
 import com.example.org.model.Login;
 import com.example.org.model.Page3;
+import com.example.org.model.Storer;
 import com.example.org.model.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -35,6 +36,42 @@ import java.util.function.Function;
 public class Request<D> {
     public static final String BD_URL = "http://localhost:9081/";
     private static WebClient webClient = WebClient.create(BD_URL);
+
+    public static Object putJ(String link, Object ob) {
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(ob);
+        HttpClient client = HttpClient.newBuilder().build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(link))
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(jsonString))
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return gson.fromJson(response.body(), ob.getClass());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void deleteJ(String s) {
+        HttpClient client = HttpClient.newBuilder().build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(s))
+                .header("Content-Type", "application/json")
+                .DELETE()
+                .build();
+        try {
+            client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     public <D> List<D> getJ(String link, Object ob){
         HttpRequest request = HttpRequest.newBuilder()
@@ -88,6 +125,8 @@ public class Request<D> {
     private static Type getObjectClass(Object ob){
         if (User.class.equals(ob.getClass())) {
             return new TypeToken<Page3<User>>(){}.getType();
+        }else if(Storer.class.equals(ob.getClass())){
+            return new TypeToken<Page3<Storer>>(){}.getType();
         }
         return null;
     }

@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "users")
 public class UserController {
-    private final UserService userService;
+    protected final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -25,4 +25,20 @@ public class UserController {
         return ResponseEntity.ok(user2);
     }
 
+    @PostMapping("/recovery")
+    public ResponseEntity<String> recoverPassword(@RequestBody String email){
+        String email2 = userService.recoverPassword(email);
+        return ResponseEntity.ok(email2);
+    }
+
+    @PutMapping
+    public ResponseEntity<User> updateUser(@RequestBody User user){
+        User user2 = userService.updateUser(user);
+        return ResponseEntity.ok(user2);
+    }
+
+    @DeleteMapping
+    public void deleteUser(@RequestBody Integer id){
+        userService.deleteUser(id);
+    }
 }

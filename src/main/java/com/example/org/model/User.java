@@ -3,12 +3,13 @@ package com.example.org.model;
 import java.time.LocalDate;
 
 public class User extends Login {
-    Integer id;
-    String firstName;
-    String paternalName;
-    String maternalName;
-    String photo;
-    String birthDate;
+    protected Integer id;
+    protected String firstName;
+    protected String paternalName;
+    protected String maternalName;
+    protected String photo;
+    protected String birthDate;
+    protected String role;
 
     public User(String email, String password) {
         super(email, password);
@@ -16,7 +17,9 @@ public class User extends Login {
 
     public User() {
         super();
+        this.role = "Cliente";
     }
+
 
     public Integer getId() {
         return id;
@@ -66,5 +69,11 @@ public class User extends Login {
         this.birthDate = birthDate;
     }
 
+    public String getRole() {
+        return role;
+    }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
