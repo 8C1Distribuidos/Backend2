@@ -1,5 +1,7 @@
 package com.example.org.model;
 
+import org.apache.juli.logging.Log;
+
 public class Login {
     protected String email;
     protected String password;
@@ -7,6 +9,9 @@ public class Login {
     public Login(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+    public Login() {
+
     }
 
     public String getEmail() {

@@ -1,29 +1,21 @@
 package com.example.org.model;
 
+import java.time.LocalDate;
+
 public class User extends Login {
-    private Integer id;
+    Integer id;
+    String firstName;
+    String paternalName;
+    String maternalName;
+    String photo;
+    String birthDate;
 
-    private String imageUrl;
-
-    private String firstName;
-
-    private String lastName;
-
-    private String role;
-
-    public User(String firstName, String lastName, String role) {
-        super("Arrobapenejdo", "Chorizada");
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.role = role;
+    public User(String email, String password) {
+        super(email, password);
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    public User() {
+        super();
     }
 
     public Integer getId() {
@@ -34,30 +26,6 @@ public class User extends Login {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -66,24 +34,37 @@ public class User extends Login {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getPaternalName() {
+        return paternalName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setPaternalName(String paternalName) {
+        this.paternalName = paternalName;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", id=" + id +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+    public String getMaternalName() {
+        return maternalName;
     }
+
+    public void setMaternalName(String maternalName) {
+        this.maternalName = maternalName;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public LocalDate getBirthDate() {
+        return LocalDate.parse(this.birthDate);
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+
 }

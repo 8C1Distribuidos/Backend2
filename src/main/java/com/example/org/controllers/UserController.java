@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "user")
+@RequestMapping(path = "users")
 public class UserController {
     private final UserService userService;
 
@@ -24,4 +24,5 @@ public class UserController {
         User user2= userService.addNewUser(user);
         return ResponseEntity.ok(user2);
     }
+
 }
