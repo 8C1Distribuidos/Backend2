@@ -13,8 +13,7 @@ import java.util.List;
 public class LoginService {
 
     public User validateLogin(Login login){
-        Request<User> request = new Request<>();
-        List<User> users = request.getJ(Request.BD_URL + "/users", new User());
+        List<User> users = Request.getJ("users", User[].class, true);
         for(User user: users ){
             if(user.getEmail().equals(login.getEmail()) && user.getPassword().equals(login.getPassword())){
                 return user;

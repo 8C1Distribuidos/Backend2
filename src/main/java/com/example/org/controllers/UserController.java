@@ -2,12 +2,10 @@ package com.example.org.controllers;
 
 import com.example.org.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.org.services.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "users")
@@ -21,8 +19,11 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> registerNewUser(@RequestBody User user){
-        User user2= userService.addNewUser(user);
-        return ResponseEntity.ok(user2);
+        User user2= userService.addNewUser(user, "Cliente");
+        if(user2 != null){
+            return ResponseEntity.ok(user2);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/recovery")
@@ -33,12 +34,18 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<User> updateUser(@RequestBody User user){
-        User user2 = userService.updateUser(user);
-        return ResponseEntity.ok(user2);
+        User user2 = userService.updateUser(user, "Cliente");
+        if(user2 != null){
+            return ResponseEntity.ok(user2);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping
-    public void deleteUser(@RequestBody Integer id){
-        userService.deleteUser(id);
+    public ResponseEntity<?> deleteUser(int id){
+        if(userService.deleteUser(id)){
+            return ResponseEntity.ok().build();
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

@@ -34,50 +34,55 @@ import java.util.List;
 import java.util.function.Function;
 
 public class Request<D> {
-    public static final String BD_URL = "http://localhost:9081/";
-    private static WebClient webClient = WebClient.create(BD_URL);
+    public static final String REST_URL = "http://localhost:9081/";
 
     public static Object putJ(String link, Object ob) {
         Gson gson = new Gson();
         String jsonString = gson.toJson(ob);
         HttpClient client = HttpClient.newBuilder().build();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(link))
+                .uri(URI.create(REST_URL + link))
                 .header("Content-Type", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonString))
                 .build();
+
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 400) {
+                return null;
+            }
             return gson.fromJson(response.body(), ob.getClass());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static void deleteJ(String s) {
+    public static boolean deleteJ(String s, int id) {
         HttpClient client = HttpClient.newBuilder().build();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(s))
+                .uri(URI.create(REST_URL + s + "?id=" + id))
                 .header("Content-Type", "application/json")
                 .DELETE()
                 .build();
         try {
-            client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 404) {
+                return false;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return true;
     }
 
-    public <D> List<D> getJ(String link, Object ob){
+    public static <D> List<D> getJ(String link, Class<D[]> classType, boolean isPage){
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .header("accept", "application/json")
-                .uri(URI.create(link))
+                .uri(URI.create(REST_URL + link))
                 .build();
         List<D> list = null;
         try {
@@ -91,42 +96,71 @@ public class Request<D> {
                             );
                         }
                     }).build().send(request, HttpResponse.BodyHandlers.ofString());
-            Page3<D> userResponseEntity = new Gson().fromJson(response.body(), getObjectClass(ob));
-            list = userResponseEntity.getContent();
-            //productsList = new ArrayList<PaperProduct>(Arrays.asList(products));
+
+            JsonParser jsonParser = new JsonParser();
+            if (isPage){
+                JsonObject body = (JsonObject) jsonParser.parse(response.body());
+                D[] arrays = new Gson().fromJson(body.getAsJsonArray("content"), classType);
+                list = new ArrayList<D>(Arrays.asList(arrays));
+                Page3<D> userResponseEntity = new Gson().fromJson(response.body(), Page3.class);
+                list = new ArrayList<D>(Arrays.asList(arrays));
+            }else {
+                D[] arrays = new Gson().fromJson(response.body(), classType);
+                list = new ArrayList<D>(Arrays.asList(arrays));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
     }
 
-    public static Object postJ(String link, Object object){
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(object);
-        HttpClient client = HttpClient.newBuilder().build();
+    public static Object find(String link, int id, Class<?> dClass){
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(link))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(jsonString))
+                .GET()
+                .header("accept", "application/json")
+                .uri(URI.create(REST_URL +link+"/find?id=" + id))
                 .build();
         try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            Object ob = gson.fromJson(response.body(), object.getClass());
-            System.out.println(response.body());
-            return ob;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            HttpResponse<String> response = HttpClient.newBuilder()
+                    .authenticator(new Authenticator() {
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(
+                                    "user",
+                                    "123".toCharArray()
+                            );
+                        }
+                    }).build().send(request, HttpResponse.BodyHandlers.ofString());
+            Gson gson = new Gson();
+            return gson.fromJson(response.body(), dClass);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private static Type getObjectClass(Object ob){
-        if (User.class.equals(ob.getClass())) {
-            return new TypeToken<Page3<User>>(){}.getType();
-        }else if(Storer.class.equals(ob.getClass())){
-            return new TypeToken<Page3<Storer>>(){}.getType();
+
+
+    public static Object postJ(String link, Object object) throws Exception {
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(object);
+        HttpClient client = HttpClient.newBuilder().build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(REST_URL + link))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonString))
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 400) {
+                throw new Exception();
+            }
+            Object ob = gson.fromJson(response.body(), object.getClass());
+            System.out.println(response.body());
+            return ob;
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
         return null;
     }

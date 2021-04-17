@@ -4,6 +4,5 @@ public class Storer extends User{
 
     public Storer(){
         super();
-        this.role = "Almacenista";
     }
 }
