@@ -22,13 +22,16 @@ public class StorerController  {
     }
 
     @GetMapping()
+    @CrossOrigin()
     public ResponseEntity<List<Storer>> getStorers(){
         List<Storer> storers = userService.getStorers();
         return ResponseEntity.ok(storers);
     }
 
     @PostMapping()
+    @CrossOrigin()
     public ResponseEntity<Storer> addStorer(@RequestBody Storer storer){
+        System.out.println(storer);
         Storer storer2 = (Storer) userService.addNewUser(storer, "Almacenist");
         if(storer2 != null){
             return ResponseEntity.ok(storer2);
@@ -38,7 +41,9 @@ public class StorerController  {
     }
 
     @PutMapping()
+    @CrossOrigin()
     public ResponseEntity<Storer> updateStorer(@RequestBody Storer storer){
+        System.out.println(storer);
         Storer storer2 = (Storer) userService.updateUser(storer, "Almacenist");
         if(storer2 != null){
             return ResponseEntity.ok(storer2);

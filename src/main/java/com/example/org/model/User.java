@@ -14,7 +14,7 @@ public class User extends Login {
     protected String paternalName;
     @NonNull
     protected String maternalName;
-    protected String photo;
+    protected String photo = "noPicture";
     protected Role role;
 
 
@@ -26,5 +26,7 @@ public class User extends Login {
     public User() {
         super();
     }
+
+
 
 }

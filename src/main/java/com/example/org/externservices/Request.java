@@ -103,6 +103,7 @@ public class Request<D> {
                 D[] arrays = new Gson().fromJson(body.getAsJsonArray("content"), classType);
                 list = new ArrayList<D>(Arrays.asList(arrays));
                 Page3<D> userResponseEntity = new Gson().fromJson(response.body(), Page3.class);
+                userResponseEntity.getTotalPages();
                 list = new ArrayList<D>(Arrays.asList(arrays));
             }else {
                 D[] arrays = new Gson().fromJson(response.body(), classType);

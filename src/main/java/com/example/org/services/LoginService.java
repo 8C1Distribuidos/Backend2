@@ -13,9 +13,10 @@ import java.util.List;
 public class LoginService {
 
     public User validateLogin(Login login){
-        List<User> users = Request.getJ("users", User[].class, true);
+        List<User> users = Request.getJ("users?pageSize=55555", User[].class, true);
         for(User user: users ){
-            if(user.getEmail().equals(login.getEmail()) && user.getPassword().equals(login.getPassword())){
+            if(user.getEmail().equals(login.getEmail()) && Encrypter.encode(login.getPassword()).equals(user.getPassword())){
+                user.setPassword("");
                 return user;
             }
         }
