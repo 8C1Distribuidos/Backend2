@@ -134,6 +134,9 @@ public class Request<D> {
                         }
                     }).build().send(request, HttpResponse.BodyHandlers.ofString());
             Gson gson = new Gson();
+            if (response.statusCode() == 400 || response.statusCode() == 404) {
+                return null;
+            }
             return gson.fromJson(response.body(), dClass);
         } catch (Exception e) {
             e.printStackTrace();

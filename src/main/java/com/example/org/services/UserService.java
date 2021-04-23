@@ -28,22 +28,26 @@ public class UserService {
             }
             String encryptation = Encrypter.encode(user.getPassword());
             user.setPassword(encryptation);
-            return (User) Request.postJ("users?pageSize=55555", user);
+            return (User) Request.postJ("users", user);
         } catch (Exception e) {
             return  null;
         }
     }
 
-    public User updateUser(User user, String role) {
-        user.setPassword(Encrypter.encode(user.getPassword()));
-        List<Role> roles = Request.getJ("roles", Role[].class, false);
-        for(Role r: roles){
-            if(r.getRole().equals(role)){
-                user.setRole(r);
-                break;
+    public User updateUser(User user) {
+        if(user.getPassword() == null){
+            User user1 = (User)Request.find("users", user.getId(), user.getClass());
+            if(user1 == null || user1.getPassword() == null){
+                return null;
             }
+            user.setPassword(user1.getPassword());
+        }else{
+            user.setPassword(Encrypter.encode(user.getPassword()));
         }
         User user1 = (User) Request.putJ("users", user);
+        if(user1 == null){
+            return null;
+        }
         user1.setPassword(null);
         return user1;
     }
@@ -54,7 +58,7 @@ public class UserService {
 
     public String recoverPassword(String email) {
         MailService mailService = null;
-        List<User> returnedUsers = Request.getJ("users?pageSize=55555", User[].class, true);
+        List<User> returnedUsers = Request.getJ("users?size=55555555", User[].class, true);
         User user = null;
         for (User u: returnedUsers){
             if(u.getEmail().equals(email)){
@@ -97,7 +101,7 @@ public class UserService {
     public List<Storer> getStorers() {
         Request<User> request = new Request<>();
         List<Storer> storers = new ArrayList<Storer>();
-        List<Storer> returnedStorers = request.getJ("users?size=55555", Storer[].class, true);
+        List<Storer> returnedStorers = request.getJ("users?size=5555555", Storer[].class, true);
         for(Storer storer :  returnedStorers){
             if(storer.getRole().getRole().equals("Almacenist")){
                 storers.add(storer);

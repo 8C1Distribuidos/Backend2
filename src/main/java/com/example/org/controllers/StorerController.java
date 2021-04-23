@@ -44,7 +44,7 @@ public class StorerController  {
     @CrossOrigin()
     public ResponseEntity<Storer> updateStorer(@RequestBody Storer storer){
         System.out.println(storer);
-        Storer storer2 = (Storer) userService.updateUser(storer, "Almacenist");
+        Storer storer2 = (Storer) userService.updateUser(storer);
         if(storer2 != null){
             return ResponseEntity.ok(storer2);
         }

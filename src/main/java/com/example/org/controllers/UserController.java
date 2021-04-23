@@ -44,7 +44,7 @@ public class UserController {
     @CrossOrigin()
     public ResponseEntity<User> updateUser(@RequestBody User user){
         System.out.println(user);
-        User user2 = userService.updateUser(user, "Cliente");
+        User user2 = userService.updateUser(user);
         if(user2 != null){
             return ResponseEntity.ok(user2);
         }
