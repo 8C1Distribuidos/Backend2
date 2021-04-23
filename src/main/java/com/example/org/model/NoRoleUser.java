@@ -10,7 +10,7 @@ public class NoRoleUser extends Login{
     protected String firstName;
     protected String paternalName;
     protected String maternalName;
-    protected String photo = "noPicture";
+    protected String photo;
 
     public NoRoleUser(String email, String password){
         this.email = email;
