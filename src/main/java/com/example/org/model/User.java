@@ -6,12 +6,7 @@ import lombok.NonNull;
 import java.time.LocalDate;
 
 @Data
-public class User extends Login {
-    protected Integer id;
-    protected String firstName;
-    protected String paternalName;
-    protected String maternalName;
-    protected String photo = "noPicture";
+public class User extends NoRoleUser {
     protected Role role;
 
     public User(Login login) {
@@ -22,5 +17,8 @@ public class User extends Login {
         super();
     }
 
+    public User(NoRoleUser noRoleUser) {
+        super(noRoleUser);
+    }
 
 }

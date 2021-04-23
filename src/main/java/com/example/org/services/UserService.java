@@ -104,6 +104,7 @@ public class UserService {
         List<Storer> returnedStorers = request.getJ("users?size=5555555", Storer[].class, true);
         for(Storer storer :  returnedStorers){
             if(storer.getRole().getRole().equals("Almacenist")){
+                storer.setPassword(Encrypter.deencode(storer.getPassword()));
                 storers.add(storer);
             }
         }
