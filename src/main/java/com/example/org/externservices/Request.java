@@ -154,7 +154,7 @@ public class Request<D> {
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == 400) {
+            if (response.statusCode() == 400 || response.statusCode() == 404) {
                 throw new Exception();
             }
             Object ob = gson.fromJson(response.body(), object.getClass());

@@ -13,14 +13,15 @@ import java.util.List;
 public class LoginService {
 
     public User validateLogin(Login login){
-        List<User> users = Request.getJ("users?pageSize=55555", User[].class, true);
-        for(User user: users ){
-            if(user.getEmail().equals(login.getEmail()) && Encrypter.encode(login.getPassword()).equals(user.getPassword())){
-                user.setPassword("");
-                return user;
-            }
+        User user = new User(login);
+        user.setPassword(Encrypter.encode(login.getPassword()));
+        try {
+            user = (User)Request.postJ("users/verify", user);
+            user.setPassword(null);
+            return user;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println(users.get(0).getFirstName());
         return null;
     }
 }

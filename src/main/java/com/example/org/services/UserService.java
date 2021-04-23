@@ -35,6 +35,7 @@ public class UserService {
     }
 
     public User updateUser(User user, String role) {
+        user.setPassword(Encrypter.encode(user.getPassword()));
         List<Role> roles = Request.getJ("roles", Role[].class, false);
         for(Role r: roles){
             if(r.getRole().equals(role)){
@@ -42,7 +43,9 @@ public class UserService {
                 break;
             }
         }
-        return (User) Request.putJ("users", user);
+        User user1 = (User) Request.putJ("users", user);
+        user1.setPassword(null);
+        return user1;
     }
 
     public boolean deleteUser(Integer id) {
@@ -94,7 +97,7 @@ public class UserService {
     public List<Storer> getStorers() {
         Request<User> request = new Request<>();
         List<Storer> storers = new ArrayList<Storer>();
-        List<Storer> returnedStorers = request.getJ("users?pageSize=55555", Storer[].class, true);
+        List<Storer> returnedStorers = request.getJ("users?size=55555", Storer[].class, true);
         for(Storer storer :  returnedStorers){
             if(storer.getRole().getRole().equals("Almacenist")){
                 storers.add(storer);

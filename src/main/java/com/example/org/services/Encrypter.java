@@ -10,7 +10,6 @@ import java.util.Arrays;
 
 public class Encrypter {
    private static final String secretKey = "encriptacionMamalona";
-
     public static String encode(String cadena) {
         String encriptacion = "";
         try {
