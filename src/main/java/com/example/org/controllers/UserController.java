@@ -29,6 +29,16 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/find")
+    public ResponseEntity<User> findUser(int id) {
+        User user2 = userService.find(id);
+        if(user2 != null){
+            user2.setPassword(null);
+            return ResponseEntity.ok(user2);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     @PostMapping("/recovery")
     @CrossOrigin()
     public ResponseEntity<String> recoverPassword(@RequestBody Email email){

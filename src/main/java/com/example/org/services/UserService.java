@@ -110,4 +110,8 @@ public class UserService {
         }
         return storers;
     }
+
+    public User find(int id) {
+        return (User) Request.find("users",id, User.class);
+    }
 }
