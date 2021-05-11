@@ -1,6 +1,7 @@
 package com.example.org.controllers;
 
 
+import com.example.org.exceptions.RequestException;
 import com.example.org.model.Login;
 import com.example.org.model.User;
 import com.example.org.services.LoginService;
@@ -23,7 +24,16 @@ public class LoginController  {
     @CrossOrigin()
     public ResponseEntity<User> login(@RequestBody Login login){
         System.out.println(login);
-        User user = loginService.validateLogin(login);
+        User user = null;
+        try {
+            user = loginService.validateLogin(login);
+        } catch (RequestException e) {
+            if(e.getStatusCode() == 400){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }else if(e.getStatusCode() == 404){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
         if(user != null){
             return ResponseEntity.ok(user);
         }
