@@ -87,15 +87,15 @@ public class UserService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-        try {
-            mailService.sendEmail();
+        //try {
+            //mailService.sendEmail();
             user.setPassword(encryptedPassword);
             Request.putJ("users", user);
             return "si";
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        //} catch (MessagingException e) {
+          //  e.printStackTrace();
+       // }
+        //return null;
     }
 
     public List<Storer> getStorers() {
