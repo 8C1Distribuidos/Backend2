@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Request<D> {
-    public static final String REST_URL = "http://25.16.129.2:9081/";
+    public static final String REST_URL = "http://localhost:9081/";
 
     public static Object putJ(String link, Object ob) {
         Gson gson = new Gson();
