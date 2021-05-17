@@ -77,7 +77,6 @@ public class MailService {
         boolean boolEmail = checkEmail(email);
         boolean boolSubject = checkText(Subject);
         boolean boolBody = checkText(Body);
-
         if (boolEmail == true && boolSubject == true && boolBody == true)
         {
             return true;
@@ -111,7 +110,7 @@ public class MailService {
         return true;
     }
 
-    private void sendEmail() throws MessagingException {
+    public void sendEmail() throws MessagingException {
         Transport.send(mimeMessage);
         System.out.println("Email successfully sent UwU");
     }

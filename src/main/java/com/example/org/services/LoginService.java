@@ -4,6 +4,8 @@ import com.example.org.exceptions.RequestException;
 import com.example.org.externservices.Request;
 import com.example.org.model.Login;
 import com.example.org.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -12,6 +14,13 @@ import java.util.List;
 
 @Service
 public class LoginService {
+
+    SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    public LoginService(SimpMessagingTemplate messagingTemplate){
+        this.messagingTemplate = messagingTemplate;
+    }
 
     public User validateLogin(Login login) throws RequestException {
         User user = new User(login);
@@ -26,5 +35,9 @@ public class LoginService {
         } catch (RequestException e) {
             throw e;
         }
+    }
+
+    public void notifyFrontend(String string){
+        messagingTemplate.convertAndSend("/session/logout", string);
     }
 }

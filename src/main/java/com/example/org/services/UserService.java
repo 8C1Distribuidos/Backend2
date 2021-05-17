@@ -5,6 +5,9 @@ import com.example.org.model.Role;
 import com.example.org.model.Storer;
 import com.example.org.model.User;
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageType;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -87,15 +90,15 @@ public class UserService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-        //try {
-            //mailService.sendEmail();
+        try {
+            mailService.sendEmail();
             user.setPassword(encryptedPassword);
             Request.putJ("users", user);
             return "si";
-        //} catch (MessagingException e) {
-          //  e.printStackTrace();
-       // }
-        //return null;
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<Storer> getStorers() {
