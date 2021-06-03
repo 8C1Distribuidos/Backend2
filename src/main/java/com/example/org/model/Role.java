@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Role {
     private Integer id;
-    private String role;
+    private String role = "Indefinido";
 }

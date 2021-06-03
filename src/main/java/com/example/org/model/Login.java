@@ -6,7 +6,7 @@ import org.apache.juli.logging.Log;
 
 @Data
 public class Login {
-    protected String email;
+    protected String email = "example@example.com";
     protected String password;
 
     public Login(String email, String password) {

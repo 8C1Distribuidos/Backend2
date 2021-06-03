@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NoRoleUser extends Login{
     protected Integer id;
-    protected String firstName;
-    protected String paternalName;
-    protected String maternalName;
+    protected String firstName = "Primer nombre";
+    protected String paternalName  = "Apellido paterno";
+    protected String maternalName = "Apellido materno";
     protected String photo;
 
     public NoRoleUser(String email, String password){

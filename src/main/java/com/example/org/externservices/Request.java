@@ -1,7 +1,9 @@
 package com.example.org.externservices;
 
 import com.example.org.exceptions.RequestException;
+import com.example.org.model.Log;
 import com.example.org.model.Page3;
+import com.example.org.services.FileWritter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -13,6 +15,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
