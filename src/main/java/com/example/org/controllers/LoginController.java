@@ -55,6 +55,14 @@ public class LoginController  {
                 FileWritter.Write(log);
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+            else if(e.getStatusCode() == 504){
+                Log log = new Log();
+                log.setDescription("Base de datos perdida "+  login.getEmail() + " fallido");
+                log.setStatus("Correcto");
+                log.setUser(login.getEmail());
+                FileWritter.Write(log);
+                return new ResponseEntity<>(HttpStatus.GATEWAY_TIMEOUT);
+            }
             Log log = new Log();
             log.setDescription("Intento de inicio de sesión de "+  login.getEmail() + " fallido");
             log.setStatus("Correcto");

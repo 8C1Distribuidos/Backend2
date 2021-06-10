@@ -1,11 +1,15 @@
 package com.example.org.services;
 
+import com.example.org.exceptions.RequestException;
 import com.example.org.externservices.Request;
+import com.example.org.model.Log;
 import com.example.org.model.Role;
 import com.example.org.model.Storer;
 import com.example.org.model.User;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -20,7 +24,7 @@ public class UserService {
 
 
 
-    public User addNewUser(User user, String role) {
+    public User addNewUser(User user, String role) throws RequestException {
         try {
             List<Role> roles = Request.getJ("roles", Role[].class, false);
             for(Role r: roles){
@@ -32,14 +36,24 @@ public class UserService {
             String encryptation = Encrypter.encode(user.getPassword());
             user.setPassword(encryptation);
             return (User) Request.postJ("users", user);
+        } catch (RequestException e) {
+            if(e.getStatusCode() == 504){
+                throw e;
+            }
         } catch (Exception e) {
             return  null;
         }
+        return  null;
     }
 
-    public User updateUser(User user) {
-        if(user.getPassword() == null){
-            User user1 = (User)Request.find("users", user.getId(), user.getClass());
+    public User updateUser(User user) throws RequestException {
+        if(user.getPassword() == null ||  user.getPassword().equals("")){
+            User user1 = null;
+            try {
+                user1 = (User) Request.find("users", user.getId(), user.getClass());
+            } catch (RequestException e) {
+                throw new RequestException("Sin base de datos", 504);
+            }
             if(user1 == null || user1.getPassword() == null){
                 return null;
             }
@@ -114,7 +128,11 @@ public class UserService {
         return storers;
     }
 
-    public User find(int id) {
-        return (User) Request.find("users",id, User.class);
+    public User find(int id) throws RequestException {
+        try {
+            return (User) Request.find("users",id, User.class);
+        } catch (RequestException e) {
+            throw new RequestException("Sin base de datos", 504);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.org.controllers;
 
+import com.example.org.exceptions.RequestException;
 import com.example.org.model.Email;
 import com.example.org.model.Log;
 import com.example.org.model.User;
@@ -24,7 +25,12 @@ public class UserController {
     @CrossOrigin()
     public ResponseEntity<User> registerNewUser(@RequestBody User user){
         System.out.println(user);
-        User user2= userService.addNewUser(user, "Cliente");
+        User user2= null;
+        try {
+            user2 = userService.addNewUser(user, "Cliente");
+        } catch (RequestException e) {
+            return new ResponseEntity<>(HttpStatus.GATEWAY_TIMEOUT);
+        }
         if(user2 != null){
             Log log = new Log();
             log.setDescription("Creación de usuario " + user2.toString());
@@ -43,7 +49,19 @@ public class UserController {
 
     @GetMapping("/find")
     public ResponseEntity<User> findUser(int id) {
-        User user2 = userService.find(id);
+        User user2 = null;
+        try {
+            user2 = userService.find(id);
+        } catch (RequestException e) {
+            if(e.getStatusCode() == 504){
+                Log log = new Log();
+                log.setDescription("Base de datos perdida");
+                log.setStatus("Incorrecto");
+                log.setUser("Indefinido");
+                FileWritter.Write(log);
+                return new ResponseEntity<>(HttpStatus.GATEWAY_TIMEOUT);
+            }
+        }
         if(user2 != null){
             user2.setPassword(null);
             return ResponseEntity.ok(user2);
@@ -62,7 +80,6 @@ public class UserController {
             log.setStatus("Incorrecto");
             log.setUser(email.getEmail());
             FileWritter.Write(log);
-
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Log log = new Log();
@@ -77,7 +94,12 @@ public class UserController {
     @CrossOrigin()
     public ResponseEntity<User> updateUser(@RequestBody User user){
         System.out.println(user);
-        User user2 = userService.updateUser(user);
+        User user2 = null;
+        try {
+            user2 = userService.updateUser(user);
+        } catch (RequestException e) {
+            return new ResponseEntity<>(HttpStatus.GATEWAY_TIMEOUT);
+        }
         if(user2 != null){
             Log log = new Log();
             log.setDescription("Actualización del usuario  " + user.toString() + " a " + user2.toString());

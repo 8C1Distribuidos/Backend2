@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Request<D> {
-    public static final String REST_URL = "http://localhost:9081/";
+    public static final String REST_URL = "http://25.16.129.2:9081/";
 
     public static Object putJ(String link, Object ob) {
         Gson gson = new Gson();
@@ -37,6 +37,9 @@ public class Request<D> {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 400) {
+                return null;
+            }
+            if (response.statusCode() == 500) {
                 return null;
             }
             return gson.fromJson(response.body(), ob.getClass());
@@ -104,7 +107,7 @@ public class Request<D> {
         return list;
     }
 
-    public static Object find(String link, int id, Class<?> dClass){
+    public static Object find(String link, int id, Class<?> dClass) throws RequestException{
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .header("accept", "application/json")
@@ -124,12 +127,13 @@ public class Request<D> {
             Gson gson = new Gson();
             if (response.statusCode() == 400 || response.statusCode() == 404) {
                 return null;
+            }else if(response.statusCode() == 500){
+                throw new RequestException("Sin base de datos", 504);
             }
             return gson.fromJson(response.body(), dClass);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RequestException("Sin base de datos", 504);
         }
-        return null;
     }
 
 
@@ -149,6 +153,9 @@ public class Request<D> {
                 throw new RequestException("Error de campos", 400);
             }else if(response.statusCode() == 404){
                 throw new RequestException("No encontrado", 404);
+            }
+            else if(response.statusCode() == 500){
+                throw new RequestException("Sin base de datos", 504);
             }
             Object ob = gson.fromJson(response.body(), object.getClass());
             System.out.println(response.body());
